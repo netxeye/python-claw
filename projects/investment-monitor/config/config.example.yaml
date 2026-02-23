@@ -1,0 +1,194 @@
+# Investment Monitor Configuration
+
+# API Keys (Get these from respective services)
+apis:
+  yahoo_finance:
+    enabled: true
+    # No API key needed for basic usage
+  
+  alpha_vantage:
+    enabled: false
+    api_key: "YOUR_ALPHA_VANTAGE_API_KEY"
+    # Get free key from: https://www.alphavantage.co/support/#api-key
+  
+  tiingo:
+    enabled: false
+    api_key: "YOUR_TIINGO_API_KEY"
+    # Get free key from: https://api.tiingo.com/
+  
+  iex_cloud:
+    enabled: false
+    api_key: "YOUR_IEX_CLOUD_API_KEY"
+    # Get free key from: https://iexcloud.io/
+
+# Assets to Monitor
+assets:
+  spy:
+    symbol: "SPY"
+    name: "SPDR S&P 500 ETF Trust"
+    enabled: true
+    weight: 0.75  # 75% target allocation
+    
+  qqq:
+    symbol: "QQQ"
+    name: "Invesco QQQ Trust"
+    enabled: true
+    weight: 0.00  # 0% in core strategy (monitor only)
+    
+  tencent:
+    symbol: "0700.HK"
+    name: "Tencent Holdings Limited"
+    enabled: true
+    weight: 0.25  # 25% target allocation
+    
+  # Additional assets for monitoring
+  additional:
+    - symbol: "VOO"   # Vanguard S&P 500 ETF
+      name: "Vanguard S&P 500 ETF"
+      enabled: false
+      
+    - symbol: "BND"   # Total Bond Market ETF
+      name: "Vanguard Total Bond Market ETF"
+      enabled: false
+
+# Analysis Settings
+analysis:
+  # Technical Indicators
+  technical:
+    moving_averages:
+      - 20   # Short-term
+      - 50   # Medium-term
+      - 200  # Long-term
+    rsi:
+      period: 14
+      overbought: 70
+      oversold: 30
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+    bollinger_bands:
+      period: 20
+      std_dev: 2
+  
+  # Fundamental Analysis
+  fundamental:
+    pe_ratio: true
+    dividend_yield: true
+    market_cap: true
+  
+  # Portfolio Analysis
+  portfolio:
+    target_return: 0.15  # 15% annual return target
+    risk_free_rate: 0.02 # 2% risk-free rate assumption
+    max_drawdown: 0.20   # 20% maximum acceptable drawdown
+    rebalance_threshold: 0.05  # Rebalance when allocation deviates by 5%
+
+# Data Collection
+data:
+  # Historical data
+  historical:
+    start_date: "2010-01-01"
+    end_date: "today"
+    interval: "1d"  # 1d, 1wk, 1mo
+    
+  # Real-time data
+  realtime:
+    update_interval: 300  # seconds (5 minutes)
+    market_hours_only: true
+    
+  # Data storage
+  storage:
+    database: "sqlite"  # sqlite, postgres, mysql
+    file_path: "./data/investment_data.db"
+    backup_days: 7
+
+# Reporting
+reporting:
+  daily_report:
+    enabled: true
+    generation_time: "18:00"  # 6 PM local time
+    format: "markdown"  # markdown, html, pdf
+    
+  alerts:
+    email:
+      enabled: false
+      smtp_server: "smtp.gmail.com"
+      smtp_port: 587
+      sender_email: "your-email@gmail.com"
+      sender_password: "your-app-password"
+      recipient_email: "your-email@gmail.com"
+    
+    telegram:
+      enabled: false
+      bot_token: "YOUR_TELEGRAM_BOT_TOKEN"
+      chat_id: "YOUR_CHAT_ID"
+    
+    # Alert conditions
+    conditions:
+      price_change_1d: 0.05    # 5% daily change
+      price_change_1wk: 0.10   # 10% weekly change
+      rsi_overbought: 70
+      rsi_oversold: 30
+      volume_spike: 2.0        # 2x average volume
+
+# Strategy Settings
+strategy:
+  sp500_tencent:
+    enabled: true
+    allocation:
+      spy_min: 0.70
+      spy_max: 0.80
+      tencent_min: 0.20
+      tencent_max: 0.30
+    
+    rebalancing:
+      frequency: "quarterly"  # daily, weekly, monthly, quarterly
+      trigger_threshold: 0.05  # 5% deviation triggers rebalance
+    
+    entry_signals:
+      rsi_below: 40
+      price_below_ma50: true
+      volume_confirmation: true
+    
+    exit_signals:
+      rsi_above: 70
+      price_above_ma50: false
+      stop_loss: 0.10  # 10% stop loss
+
+# Performance Tracking
+performance:
+  benchmark: "SPY"  # Benchmark for comparison
+  metrics:
+    - annual_return
+    - sharpe_ratio
+    - sortino_ratio
+    - max_drawdown
+    - volatility
+    - alpha
+    - beta
+  
+  backtesting:
+    start_date: "2015-01-01"
+    end_date: "2024-12-31"
+    initial_capital: 100000  # $100,000 initial investment
+    transaction_cost: 0.001  # 0.1% transaction cost
+
+# System Settings
+system:
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_file: "./logs/investment_monitor.log"
+  cache_ttl: 3600  # 1 hour cache TTL in seconds
+  
+  # Scheduled tasks
+  scheduler:
+    data_collection: "0 */4 * * *"  # Every 4 hours
+    daily_analysis: "0 18 * * *"    # Daily at 6 PM
+    weekly_report: "0 9 * * 1"      # Monday at 9 AM
+    monthly_review: "0 10 1 * *"    # 1st of month at 10 AM
+
+# Development
+development:
+  debug: false
+  test_mode: false
+  mock_data: false
