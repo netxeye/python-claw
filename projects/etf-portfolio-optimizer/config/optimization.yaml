@@ -1,0 +1,132 @@
+# ETF Portfolio Optimization Configuration
+
+# Target return (15% annual)
+target_return: 0.15
+
+# Investment horizon (years)
+investment_horizon: 5
+
+# Risk-free rate assumption
+risk_free_rate: 0.02
+
+# Optimization constraints
+constraints:
+  # Per-ETF constraints
+  min_allocation: 0.05    # Minimum 5% per ETF
+  max_allocation: 0.30    # Maximum 30% per ETF
+  
+  # Sector constraints
+  max_china_exposure: 0.25      # Maximum 25% China exposure
+  min_sp500_exposure: 0.40      # Minimum 40% SP500 core
+  max_technology_exposure: 0.25 # Maximum 25% technology
+  max_utilities_exposure: 0.15  # Maximum 15% utilities
+  
+  # Expense ratio limits
+  max_expense_ratio: 0.01       # Maximum 1% expense ratio
+  target_avg_expense: 0.002     # Target average expense ratio (0.2%)
+
+# ETF screening criteria
+screening:
+  min_aum: 100000000      # Minimum $100M AUM
+  min_volume: 100000      # Minimum 100,000 shares daily volume
+  min_age_years: 3        # Minimum 3 years since inception
+  
+  # Sector priorities (higher = more important)
+  sector_priorities:
+    sp500_core: 1.0
+    technology: 0.8
+    consumer_staples: 0.6
+    utilities: 0.5
+    china_largecap: 0.7
+    china_ashares: 0.7
+    consumer_discretionary: 0.6
+
+# Backtesting parameters
+backtesting:
+  initial_capital: 100000      # $100,000 initial investment
+  transaction_cost: 0.001      # 0.1% transaction cost
+  rebalancing_frequency: 90    # Rebalance every 90 days
+  dividend_reinvestment: true  # Reinvest dividends
+  
+  # Performance metrics to calculate
+  metrics:
+    - annual_return
+    - cumulative_return
+    - sharpe_ratio
+    - sortino_ratio
+    - max_drawdown
+    - volatility
+    - alpha
+    - beta
+    - information_ratio
+
+# Reporting
+reporting:
+  format: "markdown"      # markdown, html, pdf
+  include_charts: true
+  save_to_file: true
+  email_report: false
+  
+  # Report sections to include
+  sections:
+    - executive_summary
+    - allocation_details
+    - sector_analysis
+    - risk_metrics
+    - backtest_results
+    - recommendations
+    - disclaimer
+
+# Rebalancing strategy
+rebalancing:
+  trigger_threshold: 0.05      # Rebalance when allocation drifts 5%
+  calendar_frequency: "quarterly"  # quarterly, semi-annually, annually
+  tax_aware: false            # Consider tax implications
+  
+  # Rebalancing rules
+  rules:
+    - "Trim winners above target by 25%"
+    - "Add to losers below target by 25%"
+    - "Maintain sector exposure within bounds"
+    - "Consider transaction costs"
+
+# Risk management
+risk_management:
+  stop_loss: 0.15            # 15% stop loss trigger
+  max_drawdown_limit: 0.20   # Maximum 20% drawdown
+  volatility_target: 0.18    # Target 18% annual volatility
+  
+  # Risk-on/risk-off indicators
+  indicators:
+    - "VIX > 30: reduce equity exposure"
+    - "Yield curve inversion: increase defensives"
+    - "China PMI < 50: reduce China exposure"
+
+# Monitoring
+monitoring:
+  update_frequency: "daily"   # daily, weekly, monthly
+  alert_thresholds:
+    price_change_1d: 0.05     # 5% daily change
+    price_change_1wk: 0.10    # 10% weekly change
+    volume_spike: 2.0         # 2x average volume
+    correlation_change: 0.2    # 20% correlation change
+  
+  # Alert channels
+  alerts:
+    email: false
+    telegram: false
+    webhook: false
+
+# System settings
+system:
+  log_level: "INFO"          # DEBUG, INFO, WARNING, ERROR
+  cache_ttl: 3600            # 1 hour cache TTL in seconds
+  max_retries: 3             # Maximum API retries
+  timeout: 30                # API timeout in seconds
+  
+  # Data sources (prioritized)
+  data_sources:
+    - "yfinance"
+    - "alpha_vantage"
+    - "tiingo"
+    - "iex_cloud"
